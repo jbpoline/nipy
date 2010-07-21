@@ -5,9 +5,8 @@
 Formula objects
 ===============
 
-A formula is basically a sympy expression for the mean of something of
-the form::
-
+A formula is basically a sympy expression for the mean of something, in the case of
+the linear model, it takes the following form::
    mean = sum([Beta(e)*e for e in expr])
 
 Or, a linear combination of sympy expressions, with each one multiplied
@@ -16,7 +15,7 @@ linear regression formula, they would all be instances of Term). But, in
 general, there might be some other parameters (i.e. sympy.Symbol
 instances) that are not Terms.
 
-The design matrix is made up of columns that are the derivatives of mean
+The design matrix is made up of columns that are the derivatives of the mean
 with respect to everything that is not a Term, evaluted at a recarray
 that has field names given by [str(t) for t in self.terms].
 
@@ -60,12 +59,12 @@ like the following::
     30           1 82 59  4838
     attr(,"assign")
     [1] 0 1 2 3
-    >                                     
+    >
 
 With the Formula, it looks like this:
 
 >>> r = np.rec.array([
-...     (43, 51, 30, 39, 61, 92, 45), (63, 64, 51, 54, 63, 73, 47), 
+...     (43, 51, 30, 39, 61, 92, 45), (63, 64, 51, 54, 63, 73, 47),
 ...     (71, 70, 68, 69, 76, 86, 48), (61, 63, 45, 47, 54, 84, 35),
 ...     (81, 78, 56, 66, 71, 83, 47), (43, 55, 49, 44, 54, 49, 34),
 ...     (58, 67, 42, 56, 66, 68, 35), (71, 75, 50, 55, 70, 66, 41),
@@ -106,7 +105,7 @@ array([(51.0, 39.0, 1989.0, 1.0), (64.0, 54.0, 3456.0, 1.0),
        (66.0, 50.0, 3300.0, 1.0), (37.0, 58.0, 2146.0, 1.0),
        (54.0, 48.0, 2592.0, 1.0), (77.0, 63.0, 4851.0, 1.0),
        (75.0, 74.0, 5550.0, 1.0), (57.0, 45.0, 2565.0, 1.0),
-       (85.0, 71.0, 6035.0, 1.0), (82.0, 59.0, 4838.0, 1.0)], 
+       (85.0, 71.0, 6035.0, 1.0), (82.0, 59.0, 4838.0, 1.0)],
       dtype=[('x1', '<f8'), ('x3', '<f8'), ('x1*x3', '<f8'), ('1', '<f8')])
 '''
 
@@ -133,7 +132,7 @@ def define(*args, **kwargs):
 
 class Term(sympy.Symbol):
     """A sympy.Symbol type to represent a term an a regression model
-    
+
     Terms can be added to other sympy expressions with the single
     convention that a term plus itself returns itself.
 
@@ -173,14 +172,14 @@ def terms(*names):
     ''' Return list of terms with names given by `names`
 
     This is just a convenience in defining a set of terms, and is the
-    equivalent of ``sympy.symbols`` for defining symbols in sympy. 
+    equivalent of ``sympy.symbols`` for defining symbols in sympy.
 
     Parameters
     ----------
     *names : str or sequence of str
        If a single str, can specify multiple ``Term``s with string
-       containing space or ',' as separator. 
-    
+       containing space or ',' as separator.
+
     Returns
     -------
     ts : list
@@ -226,7 +225,7 @@ class FactorTerm(Term):
         else:
             return sympy.Symbol.__mul__(self, other)
 
-    
+
 class Beta(sympy.symbol.Dummy):
     ''' A symbol tied to a Term `term` '''
     def __new__(cls, name, term):
@@ -236,7 +235,7 @@ class Beta(sympy.symbol.Dummy):
 
 
 def getparams(expression):
-    """ Return the parameters of an expression that are not Term 
+    """ Return the parameters of an expression that are not Term
     instances but are instances of sympy.Symbol.
 
     Examples
@@ -249,7 +248,7 @@ def getparams(expression):
     _b0*x + _b1*y + _b2*z
     >>> getparams(f.mean)
     [_b0, _b1, _b2]
-    >>>                 
+    >>>
     >>> th = sympy.Symbol('theta')
     >>> f.mean*sympy.exp(th)
     (_b0*x + _b1*y + _b2*z)*exp(theta)
@@ -302,7 +301,7 @@ def getterms(expression):
 
 def make_recarray(rows, names, dtypes=None):
     """ Create recarray from `rows` with field names `names`
-    
+
     Create a recarray with named columns from a list of rows and names
     for the columns. If dtype is None, the dtype is based on rows if it
     is an np.ndarray, else the data is cast as np.float. If dtypes are
@@ -325,21 +324,21 @@ def make_recarray(rows, names, dtypes=None):
     Examples
     --------
     The following tests depend on machine byte order to pass
-    
+
     >>> arr = np.array([[3,4],[4,6],[6,8]])
     >>> make_recarray(arr, ['x','y'])
     array([[(3, 4)],
            [(4, 6)],
-           [(6, 8)]], 
+           [(6, 8)]],
           dtype=[('x', '<i8'), ('y', '<i8')])
     >>> r = make_recarray(arr, ['w', 'u'])
     >>> make_recarray(r, ['x','y'])
     array([[(3, 4)],
            [(4, 6)],
-           [(6, 8)]], 
+           [(6, 8)]],
           dtype=[('x', '<i8'), ('y', '<i8')])
     >>> make_recarray([[3,4],[4,6],[7,9]], 'wv', [np.float, np.int])
-    array([(3.0, 4), (4.0, 6), (7.0, 9)], 
+    array([(3.0, 4), (4.0, 6), (7.0, 9)],
           dtype=[('w', '<f8'), ('v', '<i8')])
     """
     # XXX This function is sort of one of convenience
@@ -389,7 +388,7 @@ class Formula(object):
     The expressions may depend on additional Symbol instances,
     giving a non-linear regression model.
     """
-    # This flag is defined to avoid using isinstance 
+    # This flag is defined to avoid using isinstance
     _formula_flag = True
 
     def __init__(self, seq, char = 'b'):
@@ -416,7 +415,7 @@ class Formula(object):
 
     def _getterms(self):
         t = self._terms
-        # The Rmode flag is meant to emulate R's implicit addition of an 
+        # The Rmode flag is meant to emulate R's implicit addition of an
         # intercept to every formula. It currently cannot be changed.
         Rmode = False
         if Rmode:
@@ -427,7 +426,7 @@ class Formula(object):
 
     def _getmean(self):
         """ Expression for mean
-        
+
         Expression for the mean, expressed as a linear combination of
         terms, each with dummy variables in front.
         """
@@ -510,7 +509,7 @@ class Formula(object):
            The expression to be changed
         new : sympy.Basic
            The value to change it to.
-        
+
         Returns
         -------
         newf : Formula
@@ -543,7 +542,7 @@ class Formula(object):
         [1, y]
         >>> sorted(f3.terms)
         [1, x, y, y, z]
-        >>>         
+        >>>
         """
         if not is_formula(other):
             raise ValueError('only Formula objects can be added to a Formula')
@@ -634,8 +633,8 @@ class Formula(object):
         # Using the random offset will minimize the possibility
         # of this happening.
 
-        # This renaming is here principally because of the 
-        # intercept. 
+        # This renaming is here principally because of the
+        # intercept.
 
         random_offset = np.random.random_integers(low=0, high=2**30)
 
@@ -672,11 +671,11 @@ class Formula(object):
         # a list
         self._f = lambdify(newparams + newterms, d)
 
-        # The input to self.design will be a recarray of that must 
+        # The input to self.design will be a recarray of that must
         # have field names that the Formula will expect to see.
         # However, if any of self.terms are FactorTerms, then the field
         # in the recarray will not actually be in the Term.
-        # 
+        #
         # For example, if there is a Factor 'f' with levels ['a','b'],
         # there will be terms 'f_a' and 'f_b', though the input to
         # design will have a field named 'f'. In this sense,
@@ -694,7 +693,7 @@ class Formula(object):
         preterm = list(set(preterm))
 
         # There is also an argument for parameters that are not
-        # Terms. 
+        # Terms.
 
         self._dtypes = {'param':np.dtype([(str(p), np.float) for p in params]),
                         'term':np.dtype([(str(t), np.float) for t in terms]),
@@ -755,7 +754,7 @@ class Formula(object):
         # The term_recarray is essentially the same as preterm_recarray,
         # except that all factors in self are expanded
         # into their respective binary columns.
-        term_recarray = np.zeros(preterm_recarray.shape[0], 
+        term_recarray = np.zeros(preterm_recarray.shape[0],
                                  dtype=self._dtypes['term'])
         for t in self.__terms:
             if not is_factor_term(t):
@@ -783,7 +782,7 @@ class Formula(object):
         # I think it is because the lambda evaluates sympy.Number(1) to 1
         # and not an array.
         D_tuple = [np.asarray(w) for w in D]
-        
+
         need_to_modify_shape = []
         OK_row_shapes = []
         for i, row in enumerate(D_tuple):
@@ -829,7 +828,7 @@ class Formula(object):
             for key, cf in contrasts.items():
                 if not is_formula(cf):
                     cf = Formula([cf])
-                L = cf.design(input, param=param_recarray, 
+                L = cf.design(input, param=param_recarray,
                               return_float=True)
                 cmatrices[key] = contrast_from_cols_or_rows(L, _D, pseudo=pinvD)
             return D, cmatrices
@@ -857,13 +856,13 @@ def natural_spline(t, knots=None, order=3, intercept=False):
     -------
     formula : Formula
          A Formula with (len(knots) + order) Terms
-         (if intercept=False, otherwise includes one more Term), 
+         (if intercept=False, otherwise includes one more Term),
          made up of the natural spline functions.
 
     Examples
     --------
     The following results depend on machine byte order
-       
+
     >>> x = Term('x')
     >>> n = natural_spline(x, knots=[1,3,4], order=3)
     >>> xval = np.array([3,5,7.]).view(np.dtype([('x', np.float)]))
@@ -874,8 +873,8 @@ def natural_spline(t, knots=None, order=3, intercept=False):
     >>> d = n.design(xval)
     >>> print d.dtype.descr
     [('ns_1(x)', '<f8'), ('ns_2(x)', '<f8'), ('ns_3(x)', '<f8'), ('ns_4(x)', '<f8'), ('ns_5(x)', '<f8'), ('ns_6(x)', '<f8')]
-    >>>                    
-                    
+    >>>
+
     """
     if knots is None:
         knots = {}
@@ -907,7 +906,7 @@ I = Formula([sympy.Number(1)])
 
 class Factor(Formula):
     """ A qualitative variable in a regression model
-    
+
     A Factor is similar to R's factor. The levels of the Factor can be
     either strings or ints.
     """
@@ -932,13 +931,13 @@ class Factor(Formula):
         levelsarr = np.asarray(levels)
         if levelsarr.ndim == 0 and levelsarr.dtype.kind == 'S':
             levelsarr = np.asarray(list(levels))
-        
+
         if levelsarr.dtype.kind != 'S': # the levels are not strings
             if not np.alltrue(np.equal(levelsarr, np.round(levelsarr))):
                 raise ValueError('levels must be strings or ints')
             levelsarr = levelsarr.astype(np.int)
-            
-        Formula.__init__(self, [FactorTerm(name, l) for l in levelsarr], 
+
+        Formula.__init__(self, [FactorTerm(name, l) for l in levelsarr],
                         char=char)
         self.levels = list(levelsarr)
         self.name = name
@@ -975,7 +974,7 @@ class Factor(Formula):
         formula : Formula
             Formula whose mean has one parameter named variable%d, for each
             level in self.levels
-        
+
         Examples
         --------
         >>> f = Factor('a', ['x','y'])
@@ -1036,7 +1035,7 @@ class Factor(Formula):
 
 def contrast_from_cols_or_rows(L, D, pseudo=None):
     """ Construct a contrast matrix from a design matrix D
-    
+
     (possibly with its pseudo inverse already computed)
     and a matrix L that either specifies something in
     the column space of D or the row space of D.
@@ -1049,8 +1048,8 @@ def contrast_from_cols_or_rows(L, D, pseudo=None):
        Design matrix used to create the contrast.
     pseudo : None or array-like, optional
        If not None, gives pseudo-inverse of `D`.  Allows you to pass
-       this if it is already calculated. 
-       
+       this if it is already calculated.
+
     Returns
     -------
     C : ndarray
@@ -1083,7 +1082,7 @@ def contrast_from_cols_or_rows(L, D, pseudo=None):
     """
     L = np.asarray(L)
     D = np.asarray(D)
-    
+
     n, p = D.shape
 
     if L.shape[0] != n and L.shape[1] != p:
@@ -1096,12 +1095,12 @@ def contrast_from_cols_or_rows(L, D, pseudo=None):
         C = np.dot(pseudo, L).T
     else:
         C = np.dot(pseudo, np.dot(D, L.T)).T
-        
+
     Lp = np.dot(D, C.T)
 
     if len(Lp.shape) == 1:
         Lp.shape = (n, 1)
-        
+
     if rank(Lp) != Lp.shape[1]:
         Lp = fullrank(Lp)
         C = np.dot(pseudo, Lp).T
@@ -1145,7 +1144,7 @@ def fullrank(X, r=None):
 
 class RandomEffects(Formula):
     """ Covariance matrices for common random effects analyses.
-    
+
     Examples
     --------
     >>> subj = make_recarray([2,2,2,3,3], 's')
@@ -1183,7 +1182,7 @@ class RandomEffects(Formula):
 
         self._counter = 0
         if sigma is None:
-            self.sigma = np.diag([sympy.Symbol('s2_%d' % i, dummy=True) for i in 
+            self.sigma = np.diag([sympy.Symbol('s2_%d' % i, dummy=True) for i in
                                   range(q)])
         else:
             self.sigma = sigma
@@ -1202,13 +1201,13 @@ class RandomEffects(Formula):
         -----------
 
         term : np.recarray
-             Recarray including fields corresponding to the Terms in 
+             Recarray including fields corresponding to the Terms in
              getparams(self.design_expr).
 
         param : np.recarray
-             Recarray including fields that are not Terms in 
+             Recarray including fields that are not Terms in
              getparams(self.design_expr)
-        
+
         Outputs:
         --------
 
