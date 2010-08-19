@@ -69,7 +69,7 @@ def pca(data, axis=0, mask=None, ncomp=None, standardize=True,
         $L$ is the number of non-trivial components found after applying
        `tol_ratio` to the projections of `design_keep` and
        `design_resid`.
-    
+
        `results` has keys:
 
        * ``basis_vectors``: series over `axis`, shape (data.shape[axis], L) -
@@ -142,7 +142,7 @@ def pca(data, axis=0, mask=None, ncomp=None, standardize=True,
     C  = _get_covariance(data, UX, standardize_from, mask)
     # find the eigenvalues D and eigenvectors Vs of the covariance
     # matrix
-    D, Vs = spl.eigh(C)
+    D, Vs = spl.eigh(C.copy())
     # sort both in descending order of eigenvalues
     order = np.argsort(-D)
     D = D[order]
@@ -163,7 +163,8 @@ def pca(data, axis=0, mask=None, ncomp=None, standardize=True,
             'pcnt_var': pcntvar,
             'basis_projections': out,
             'axis': axis,
-            'C': C}
+            'C': C,
+            'UX': UX}
 
 
 def _get_covariance(data, UX, standardize_from, mask):
@@ -200,7 +201,7 @@ def _get_basis_projections(data, subVX, standardize_from):
 
 def pca_image(xyz_image, axis='t', mask=None, ncomp=None, standardize=True,
               design_keep=None, design_resid='mean', tol_ratio=0.01):
-    """ Compute the PCA of an image over a specified axis. 
+    """ Compute the PCA of an image over a specified axis.
 
     Parameters
     ----------
@@ -245,7 +246,7 @@ def pca_image(xyz_image, axis='t', mask=None, ncomp=None, standardize=True,
         $L$ is the number of non-trivial components found after applying
        `tol_ratio` to the projections of `design_keep` and
        `design_resid`.
-    
+
        `results` has keys:
 
        * ``basis_vectors``: series over `axis`, shape (data.shape[axis], L) -
@@ -280,7 +281,7 @@ def pca_image(xyz_image, axis='t', mask=None, ncomp=None, standardize=True,
     # do the PCA
     res = pca(data, 0, mask_data, ncomp, standardize,
               design_keep, design_resid, tol_ratio)
-    # Clean up images after PCA 
+    # Clean up images after PCA
     img_first_axis = image.axes.coord_names[0]
     # Rename the axis.
     #
@@ -295,11 +296,11 @@ def pca_image(xyz_image, axis='t', mask=None, ncomp=None, standardize=True,
     # We have to roll the axis back
     roll_index = xyz_image.axes.index(img_first_axis)
     output_img = image_rollaxis(output_img, roll_index, inverse=True)
-    output_xyz = XYZImage(output_img.get_data(), 
+    output_xyz = XYZImage(output_img.get_data(),
                           xyz_image.affine,
                           output_img.axes.coord_names)
     key = 'basis_vectors over %s' % img_first_axis
     res[key] = res['basis_vectors']
     res['basis_projections'] = output_xyz
     return res
-  
+

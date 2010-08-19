@@ -46,9 +46,24 @@ def test_same_cov():
     arr4d = data['fmridata']
     shp = arr4d.shape
     arr2d =  arr4d.reshape((np.prod(shp[:3]), shp[3]))
-    res = pca(arr2d, axis=-1)
+    arr2d = np.rollaxis(arr2d,1)
+    res = pca(arr2d, axis=0, standardize = False)
+    import scipy.linalg as spl
+    from nipy.modalities.fmri.pca import _get_covariance
+    X = np.eye(arr2d.shape[0])
+    XZ = X - np.mean(X,0)[None,...]
+    UX, SX, VX = spl.svd(XZ, full_matrices=0)
+    rank = (SX/SX.max() > 0.01).sum()
+    UX = UX[:,range(rank)].T
+    C = _get_covariance(arr2d,UX,None,None)
     for i in range(5):
-        res_again = pca(arr2d, axis=-1)
+       C_tmp = _get_covariance(arr2d,UX,None,None)
+       assert_true(np.all(C==C_tmp))
+    for i in range(5):
+        res_again = pca(arr2d, axis=0, standardize = False)
+        assert_true(np.all(res['UX'] ==
+                           res_again['UX']))
+
         assert_true(np.all(res['C'] ==
                            res_again['C']))
 
@@ -100,7 +115,7 @@ def test_diagonality():
     # basis_projections are diagonal, whether standarized or not
     p = pca(data['fmridata'], -1) # standardized
     yield assert_true(diagonal_covariance(p['basis_projections'], -1))
-    pns = pca(data['fmridata'], -1, standardize=False) # not 
+    pns = pca(data['fmridata'], -1, standardize=False) # not
     yield assert_true(diagonal_covariance(pns['basis_projections'], -1))
 
 
@@ -135,7 +150,7 @@ def test_2D():
     p = pca(data, standardize=False)
     imgs = p['basis_projections']
     yield assert_true(diagonal_covariance(imgs))
-    
+
 
 @parametric
 def test_PCAMask():
