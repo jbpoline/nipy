@@ -26,13 +26,21 @@ from nipy.labs.viz import plot_map, cm
 from nipy.modalities.fmri.glm import GeneralLinearModel, data_scaling
 from nipy.utils import example_data
 
-# Optional argument
+
+
+# Optional argument - default value below
 cvect = [1, 0, 0, 0]
 if len(sys.argv) > 1:
-    tmp = list(sys.argv[1])
-    for i in range(tmp.count(',')):
-        tmp.remove(',')
-    cvect = map(float, tmp)
+    print sys.argv[1]
+    try:
+        tmp = sys.argv[1].split(',')
+        cvect = [float(argval) for argval in tmp]
+        if len(cvect) != 4:
+            quit()
+    except: # any error ? :
+        print('usage : python %s 1x4-contrast') % sys.argv[0] 
+        print('where 1x4-contrast is something like 1,0,0,0')
+        quit()
 
 
 # Input files
