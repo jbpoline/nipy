@@ -39,14 +39,14 @@ def _reduce_and_concatenate(data1, data2, chunksize):
 
 def _field_gradient_jac(ref, target):
     """
-    Given a reference field ref and a target field target
-    compute the jacobian of the target with respect to ref
+    Given a reference ref field and a target field compute the jacobian of the
+    target with respect to ref
 
     Parameters
     ----------
     ref: Field instance
         that yields the topology of the space
-    target : array of shape(ref.V,dim)
+    target : array of shape(ref.V, ref.field.shape[1])
 
     Returns
     -------
@@ -211,7 +211,7 @@ def _field_gradient_jac_Map(i, ref, target, targeti):
 
 def _optim_hparcel(feature, domain, graphs, nb_parcel, lamb=1., dmax=10.,
                    niter=5, initial_mask=None, chunksize=1.e5, verbose=0):
-    """ Core function of the heirrachical parcellation procedure.
+    """ Core function of the hierachical parcellation procedure.
 
     Parameters
     ----------
@@ -220,7 +220,7 @@ def _optim_hparcel(feature, domain, graphs, nb_parcel, lamb=1., dmax=10.,
     graphs: graph that represents the topology of the parcellation
     anat_coord: array of shape (nvox,3) space defining set of coordinates
     nb_parcel: int
-               the number of desrired parcels
+               the number of desired parcels
     lamb=1.0: parameter to weight position
               and feature impact on the algorithm
     dmax = 10: locality parameter (in the space of anat_coord)

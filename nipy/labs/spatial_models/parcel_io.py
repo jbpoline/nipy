@@ -69,7 +69,7 @@ def parcel_input(mask_images, learning_images, ths=.5, fdim=None):
           if nb_feature (the dimension of the data) used in subsequent analyses
           if greater than fdim,
           a PCA is perfomed to reduce the information in the data
-          Byd efault, no reduction is performed
+          By default, no reduction is performed
 
     Returns
     -------
@@ -122,7 +122,8 @@ def parcel_input(mask_images, learning_images, ths=.5, fdim=None):
 
 
 def write_parcellation_images(Pa, template_path=None, indiv_path=None,
-                              subject_id=None, swd=None):
+                              subject_id=None, swd=None,
+                              msg='Intra-subject parcellation'):
     """ Write images that describe the spatial structure of the parcellation
 
     Parameters
@@ -137,6 +138,8 @@ def write_parcellation_images(Pa, template_path=None, indiv_path=None,
                 subject identifiers, used to infer the paths when not available
     swd: string, optional
          output directory used to infer the paths when these are not available
+    msg: string, optional
+         A message to be written in the description field of the nifti header
     """
     # argument check
     if swd == None:
@@ -160,7 +163,7 @@ def write_parcellation_images(Pa, template_path=None, indiv_path=None,
     tlabs = Pa.template_labels.astype(np.int16)
     template = SubDomains(Pa.domain, tlabs)
     template_img = template.to_image(
-        fid='id', roi=True, descrip='Intra-subject parcellation template')
+        fid='id', roi=True, descrip= msg+' template')
     save(template_img, template_path)
 
     # write subject-related stuff
@@ -168,8 +171,7 @@ def write_parcellation_images(Pa, template_path=None, indiv_path=None,
         # write the individual label images
         labs = Pa.individual_labels[:, s]
         parcellation = SubDomains(Pa.domain, labs)
-        parcellation_img = parcellation.to_image(
-            fid='id', roi=True, descrip='Intra-subject parcellation')
+        parcellation_img = parcellation.to_image(fid='id', roi=True, descrip=msg)
         save(parcellation_img, indiv_path[s])
 
 
