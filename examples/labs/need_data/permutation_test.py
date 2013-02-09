@@ -9,7 +9,7 @@ Needs *example data* package
 
 import numpy as np
 
-from nipy.labs.group.permutation_test import permutation_test_onesample
+from nipy.labs.group.permutation_test import Permutation_test_onesample
 
 from nipy.utils import example_data
 
@@ -21,7 +21,7 @@ f = np.load(group_data)
 data, vardata, xyz = f['mat'], f['var'], f['xyz']
 
 # Create one-sample permutation test instance
-ptest = permutation_test_onesample(data, xyz, stat_id='wilcoxon')
+ptest = Permutation_test_onesample(data, xyz, stat_id='wilcoxon')
 
 # Cluster definition: (threshold, diameter)
 # Note that a list of definitions can be passed to ptest.calibrate

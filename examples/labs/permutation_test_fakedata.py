@@ -28,11 +28,11 @@ def make_data(n=10, mask_shape=(10, 10, 10), axis=0, r=3, signal=5):
     return data, vardata, XYZ
 
 ###############################################################################
-# Example for using permutation_test_onesample class
+# Example for using Permutation_test_onesample class
 data, vardata, XYZ = make_data()
 
 # rfx calibration
-P = PT.permutation_test_onesample(data, XYZ)
+P = PT.Permutation_test_onesample(data, XYZ)
 
 # clusters definition (height threshold, max diameter)
 c = [(P.random_Tvalues[P.ndraws * (0.95)], None)]
@@ -44,25 +44,25 @@ voxel_results, cluster_results, region_results = \
                 P.calibrate(nperms=100, clusters=c, regions=[r])
 
 # mfx calibration
-P = PT.permutation_test_onesample(data, XYZ, vardata=vardata,
+P = PT.Permutation_test_onesample(data, XYZ, vardata=vardata,
                                   stat_id="student_mfx")
 voxel_results, cluster_results, region_results = \
                 P.calibrate(nperms=100, clusters=c, regions=[r])
 
 ###############################################################################
-# Example for using permutation_test_twosample class
+# Example for using Permutation_test_twosample class
 data, vardata, XYZ = make_data(n=20)
 data1, vardata1, data2, vardata2 = (data[:10], vardata[:10], data[10:],
                                     vardata[10:])
 
 # rfx calibration
-P = PT.permutation_test_twosample(data1, data2, XYZ)
+P = PT.Permutation_test_twosample(data1, data2, XYZ)
 c = [(P.random_Tvalues[P.ndraws * (0.95)], None)]
 voxel_results, cluster_results, region_results = P.calibrate(nperms=100,
                                                              clusters=c)
 
 # mfx calibration
-P = PT.permutation_test_twosample(data1, data2, XYZ, vardata1=vardata1,
+P = PT.Permutation_test_twosample(data1, data2, XYZ, vardata1=vardata1,
                                   vardata2=vardata2, stat_id="student_mfx")
 voxel_results, cluster_results, region_results = P.calibrate(nperms=100,
                                                              clusters=c)

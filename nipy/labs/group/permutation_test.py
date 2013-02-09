@@ -11,7 +11,7 @@ import warnings
 from nipy.algorithms.graph import wgraph_from_3d_grid
 from nipy.algorithms.graph.field import Field, field_from_graph_and_data
 
-from ..utils import zscore 
+from ..utils import zscore
 from .onesample import stat as os_stat, stat_mfx as os_stat_mfx
 from .twosample import stat as ts_stat, stat_mfx as ts_stat_mfx
 
@@ -102,7 +102,7 @@ def extract_clusters_from_diam(T,XYZ,th,diam,k=18):
 
 def _extract_clusters_from_diam(labels, T, XYZ, th, diam, k,
                                 nCC, CClabels):
-    """ 
+    """
     This recursive function modifies the `labels` input array.
     """
     clust_label = 0
@@ -127,7 +127,7 @@ def _extract_clusters_from_diam(labels, T, XYZ, th, diam, k,
             # compute the blobs
             idx, parent,label = F.threshold_bifurcations(0,th)
             nidx = np.size(idx)
-            height = np.array([np.ceil(np.sum(label == i) ** (1./3)) 
+            height = np.array([np.ceil(np.sum(label == i) ** (1./3))
                                for i in np.arange(nidx)])
             #root = nidx-1
             root = np.where(np.arange(nidx)==parent)[0]
@@ -205,20 +205,22 @@ def sorted_values(a):
 
 
 
-def onesample_stat(Y, V, stat_id, base=0.0, axis=0, Magics=None, niter=DEF_NITER):
+def onesample_stat(Y, V, stat_id, base=0.0, axis=0, Magics=None, \
+                   niter=DEF_NITER):
     """
     Wrapper for os_stat and os_stat_mfx
     """
-    if stat_id.find('_mfx')<0: 
+    if stat_id.find('_mfx')<0:
         return os_stat(Y, stat_id, base, axis, Magics)
     else:
         return os_stat_mfx(Y, V, stat_id, base, axis, Magics, niter)
 
-def twosample_stat(Y1, V1, Y2, V2, stat_id, axis=0, Magics=None, niter=DEF_NITER):
+def twosample_stat(Y1, V1, Y2, V2, stat_id, axis=0, Magics=None, \
+                   niter=DEF_NITER):
     """
     Wrapper for ts_stat and ts_stat_mfx
     """
-    if stat_id.find('_mfx')<0: 
+    if stat_id.find('_mfx')<0:
         return ts_stat(Y1, Y2, stat_id, axis, Magics)
     else:
         return ts_stat_mfx(Y1, V1, Y2, V2, stat_id, axis, Magics, niter)
@@ -231,13 +233,17 @@ def twosample_stat(Y1, V1, Y2, V2, stat_id, axis=0, Magics=None, niter=DEF_NITER
 
 
 
-def compute_cluster_stats(Tvalues, labels, random_Tvalues, cluster_stats=["size","Fisher"]):
+def compute_cluster_stats(Tvalues, labels, random_Tvalues, \
+                          cluster_stats=["size","Fisher"]):
     """
-    size_values, Fisher_values = compute_cluster_stats(Tvalues, labels, random_Tvalues, cluster_stats=["size","Fisher"])
+    size_values, Fisher_values = compute_cluster_stats(Tvalues, labels, \
+                            random_Tvalues, cluster_stats=["size","Fisher"])
     Compute summary statistics in each cluster
-    In:  see permutation_test_onesample class docstring
-    Out: size_values   Array of size nclust, or None if "size" not in cluster_stats
-         Fisher_values Array of size nclust, or None if "Fisher" not in cluster_stats
+    In:  see Permutation_test_onesample class docstring
+    Out: size_values   Array of size nclust, or None if "size" not in \
+            cluster_stats
+         Fisher_values Array of size nclust, or None if "Fisher" not in \
+                 cluster_stats
     """
     nclust = max(labels)+1
     if nclust == 0:
@@ -257,7 +263,8 @@ def compute_cluster_stats(Tvalues, labels, random_Tvalues, cluster_stats=["size"
         if "Fisher" in cluster_stats:
             Fisher_values = np.zeros(nclust,float)
             ndraws = len(random_Tvalues)
-            pseudo_p_values = 1 - np.searchsorted(random_Tvalues,Tvalues)/float(ndraws)
+            pseudo_p_values = 1 - np.searchsorted(random_Tvalues,Tvalues) \
+                                                /float(ndraws)
         else:
             Fisher_values = None
     for i in xrange(nclust):
@@ -272,13 +279,15 @@ def compute_cluster_stats(Tvalues, labels, random_Tvalues, cluster_stats=["size"
 
 def compute_region_stat(Tvalues, labels, label_values, random_Tvalues):
     """
-    Fisher_values = compute_region_stat(Tvalues, labels, label_values, random_Tvalues)
+    Fisher_values = compute_region_stat(Tvalues, labels, label_values, \
+            random_Tvalues)
     Compute summary statistics in each cluster
-    In:  see permutation_test_onesample class docstring
+    In:  see Permutation_test_onesample class docstring
     Out: Fisher_values Array of size nregions
     """
     Fisher_values = np.zeros(len(label_values),float)
-    pseudo_p_values = 1 - np.searchsorted(random_Tvalues,Tvalues)/float(len(random_Tvalues))
+    pseudo_p_values = 1 - np.searchsorted(random_Tvalues,Tvalues) \
+                                        /float(len(random_Tvalues))
     for i in xrange(len(label_values)):
         I = np.where(labels==label_values[i])[0]
         Fisher_values[i] = -np.sum(np.log(pseudo_p_values[I]))
@@ -286,7 +295,8 @@ def compute_region_stat(Tvalues, labels, label_values, random_Tvalues):
 
 def peak_XYZ(XYZ, Tvalues, labels, label_values):
     """
-    Returns (3, n_labels) array of maximum T values coordinates for each label value
+    Returns (3, n_labels) array of maximum T values coordinates for
+            each label value
     """
     C = np.zeros((3, len(label_values)), int)
     for i in xrange(len(label_values)):
@@ -300,68 +310,68 @@ def peak_XYZ(XYZ, Tvalues, labels, label_values):
 #======================================
 #======================================
 
-class permutation_test(object):
+class Permutation_test(object):
     """
     This generic permutation test class contains the calibration method
-    which is common to the derived classes permutation_test_onesample and 
-    permutation_test_twosample (as well as other common methods)
+    which is common to the derived classes Permutation_test_onesample and
+    Permutation_test_twosample (as well as other common methods)
     """
     #=======================================================
     # Permutation test calibration of summary statistics
     #=======================================================
-    def calibrate(self, nperms=DEF_NPERMS, clusters=None, 
-                  cluster_stats=["size","Fisher"], regions=None, 
+    def calibrate(self, nperms=DEF_NPERMS, clusters=None,
+                  cluster_stats=["size","Fisher"], regions=None,
                   region_stats=["Fisher"], verbose=False):
         """
         Calibrate cluster and region summary statistics using permutation test
 
         Parameters
         ----------
-        nperms : int, optional    
+        nperms : int, optional
             Number of random permutations generated.
             Exhaustive permutations are used only if nperms=None,
             or exceeds total number of possible permutations
-            
+
         clusters : list [(thresh1,diam1),(thresh2,diam2),...], optional
             List of cluster extraction pairs: (thresh,diam).  *thresh* provides
             T values threshold, *diam* is the maximum cluster diameter, in
             voxels.  Using *diam*==None yields classical suprathreshold
             clusters.
-            
+
         cluster_stats : list [stat1,...], optional
             List of cluster summary statistics id (either 'size' or 'Fisher')
-            
-        regions : list [Labels1,Labels2,...] 
-            List of region labels arrays, of size (p,) where p is the number 
+
+        regions : list [Labels1,Labels2,...]
+            List of region labels arrays, of size (p,) where p is the number
             of voxels
-            
+
         region_stats : list [stat1,...], optional
-            List of cluster summary statistics id (only 'Fisher' supported 
+            List of cluster summary statistics id (only 'Fisher' supported
             for now)
-            
+
         verbose : boolean, optional
             "Chatterbox" mode switch
 
         Returns
         -------
-        voxel_results : dict 
+        voxel_results : dict
             A dictionary containing the following keys: ``p_values`` (p,)
             Uncorrected p-values.``Corr_p_values`` (p,) Corrected p-values,
             computed by the Tmax procedure.  ``perm_maxT_values`` (nperms)
             values of the maximum statistic under permutation.
-        cluster_results : list [results1,results2,...] 
-            List of permutation test results for each cluster extraction pair. 
-            These are dictionaries with the following keys "thresh", "diam", 
-            "labels", "expected_voxels_per_cluster", 
-            "expected_number_of_clusters", and "peak_XYZ" if XYZ field is 
-            nonempty and for each summary statistic id "S": "size_values", 
-            "size_p_values", "S_Corr_p_values", "perm_size_values", 
+        cluster_results : list [results1,results2,...]
+            List of permutation test results for each cluster extraction pair.
+            These are dictionaries with the following keys "thresh", "diam",
+            "labels", "expected_voxels_per_cluster",
+            "expected_number_of_clusters", and "peak_XYZ" if XYZ field is
+            nonempty and for each summary statistic id "S": "size_values",
+            "size_p_values", "S_Corr_p_values", "perm_size_values",
             "perm_maxsize_values"
-        region_results :list [results1,results2,...] 
-            List of permutation test results for each region labels arrays. 
-            These are dictionaries with the following keys: "label_values", 
-            "peak_XYZ" (if XYZ field nonempty) and for each summary statistic 
-            id "S": "size_values", "size_p_values", "perm_size_values", 
+        region_results :list [results1,results2,...]
+            List of permutation test results for each region labels arrays.
+            These are dictionaries with the following keys: "label_values",
+            "peak_XYZ" (if XYZ field nonempty) and for each summary statistic
+            id "S": "size_values", "size_p_values", "perm_size_values",
             "perm_maxsize_values"
         """
         # Permutation indices
@@ -522,7 +532,7 @@ class permutation_test(object):
                         perm_Fisher_p_values[j][I] = 1 - np.arange(1,nmagic+1)/float(nmagic)
                     perm_min_Fisher_p_values = np.sort(perm_Fisher_p_values.min(axis=0))
                     region_results[i]["Fisher_Corr_p_values"] = 1 - np.searchsorted(-perm_min_Fisher_p_values,-region_results[i]["Fisher_p_values"])/float(nmagic)
-        voxel_results = {'p_values':p_values/float(nmagic), 
+        voxel_results = {'p_values':p_values/float(nmagic),
                          'Corr_p_values':Corr_p_values/float(nmagic),
                          'perm_maxT_values':perm_maxT_values}
         return voxel_results, cluster_results, region_results
@@ -555,17 +565,17 @@ class permutation_test(object):
         if Tvalues == None:
             Tvalues = self.Tvalues
         return 1 - np.searchsorted(self.random_Tvalues, Tvalues)/float(self.ndraws)
-        
+
 
     def zscore(self, Tvalues=None):
         """
         Return z score corresponding to the uncorrected
         voxel-level pseudo p-value.
         """
-        if Tvalues == None: 
+        if Tvalues == None:
             Tvalues = self.Tvalues
         return zscore(self.pvalue(Tvalues))
- 
+
 
 #======================================
 #======================================
@@ -574,17 +584,17 @@ class permutation_test(object):
 #======================================
 
 
-class permutation_test_onesample(permutation_test):
+class Permutation_test_onesample(Permutation_test):
     """
-    Class derived from the generic permutation_test class.
+    Class derived from the generic Permutation_test class.
     Inherits the calibrate method
     """
-    
-    def __init__(self, data, XYZ, axis=0, vardata=None, 
+
+    def __init__(self, data, XYZ, axis=0, vardata=None,
                  stat_id=DEF_STAT_ONESAMPLE, base=0.0, niter=DEF_NITER,
                  ndraws=DEF_NDRAWS):
         """
-        Initialize permutation_test_onesample instance,
+        Initialize Permutation_test_onesample instance,
         compute statistic values in each voxel and under permutation
         In:  data                data array
              XYZ                 voxels coordinates
@@ -648,15 +658,15 @@ class permutation_test_onesample(permutation_test):
 #==================================================================
 
 
-class permutation_test_onesample_graph(permutation_test):
+class Permutation_test_onesample_graph(Permutation_test):
     """
-    Class derived from the generic permutation_test class.
+    Class derived from the generic Permutation_test class.
     Inherits the calibrate method
     """
-    
+
     def __init__(self,data,G,axis=0,vardata=None,stat_id=DEF_STAT_ONESAMPLE,base=0.0,niter=DEF_NITER,ndraws=DEF_NDRAWS):
         """
-        Initialize permutation_test_onesample instance,
+        Initialize Permutation_test_onesample instance,
         compute statistic values in each voxel and under permutation
         In:  data                data array
              G                   weighted graph (each vertex corresponds to a voxel)
@@ -720,14 +730,14 @@ class permutation_test_onesample_graph(permutation_test):
 #======================================
 
 
-class permutation_test_twosample(permutation_test):
+class Permutation_test_twosample(Permutation_test):
     """
-    Class derived from the generic permutation_test class.
+    Class derived from the generic Permutation_test class.
     Inherits the calibrate method
     """
     def __init__(self,data1,data2,XYZ,axis=0,vardata1=None,vardata2=None,stat_id=DEF_STAT_TWOSAMPLE,niter=DEF_NITER,ndraws=DEF_NDRAWS):
         """
-        Initialize permutation_test_twosample instance,
+        Initialize Permutation_test_twosample instance,
         compute statistic values in each voxel and under permutation
         In:  data1, data2        data arrays
              XYZ                 voxels coordinates

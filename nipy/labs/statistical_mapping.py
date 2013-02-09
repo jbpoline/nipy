@@ -12,10 +12,7 @@ from ..algorithms.graph.graph import wgraph_from_3d_grid
 from ..algorithms.statistics import empirical_pvalue
 from .glm import glm
 from .group.permutation_test import \
-     permutation_test_onesample, permutation_test_twosample
-
-# FIXME: rename permutation_test_onesample class
-#so that name starts with upper case
+     Permutation_test_onesample, Permutation_test_twosample
 
 
 ###############################################################################
@@ -158,7 +155,7 @@ def cluster_stats(zimg, mask, height_th, height_control='fpr',
 
 def get_3d_peaks(image, mask=None, threshold=0., nn=18, order_th=0):
     """
-    returns all the peaks of image that are with the mask
+    returns all the peaks of image that are within the mask
     and above the provided threshold
 
     Parameters
@@ -254,7 +251,7 @@ def onesample_test(data_images, vardata_images, mask_images, stat_id,
                                               mask_images)
 
     # Create one-sample permutation test instance
-    ptest = permutation_test_onesample(data, xyz, vardata=vardata,
+    ptest = Permutation_test_onesample(data, xyz, vardata=vardata,
                                        stat_id=stat_id)
 
     # Compute z-map image
@@ -298,10 +295,10 @@ def twosample_test(data_images, vardata_images, mask_images, labels, stat_id,
 
     # Create two-sample permutation test instance
     if vardata_images == None:
-        ptest = permutation_test_twosample(
+        ptest = Permutation_test_twosample(
             data[labels == 1], data[labels == 2], xyz, stat_id=stat_id)
     else:
-        ptest = permutation_test_twosample(
+        ptest = Permutation_test_twosample(
             data[labels == 1], data[labels == 2], xyz,
             vardata1=vardata[labels == 1], vardata2=vardata[labels == 2],
             stat_id=stat_id)

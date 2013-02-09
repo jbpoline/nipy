@@ -26,14 +26,14 @@ class test_permutation_test(unittest.TestCase):
     def test_onesample(self):
         data, vardata, XYZ = make_data()
         # rfx calibration
-        P = pt.permutation_test_onesample(data, XYZ, ndraws=ndraws)
+        P = pt.Permutation_test_onesample(data, XYZ, ndraws=ndraws)
         c = [(P.random_Tvalues[P.ndraws*(0.95)],None), (
                 P.random_Tvalues[P.ndraws*(0.5)], 18.)]
         r = np.ones(data.shape[1],int)
         r[data.shape[1]/2:] *= 10
         #p_values, cluster_results, region_results = P.calibrate(nperms=100, clusters=c, regions=[r])
         # mfx calibration
-        P = pt.permutation_test_onesample(
+        P = pt.Permutation_test_onesample(
             data, XYZ, vardata=vardata, stat_id="student_mfx", ndraws=ndraws)
         p_values, cluster_results, region_results = P.calibrate(
             nperms=nperms, clusters=c, regions=[r])
@@ -42,13 +42,13 @@ class test_permutation_test(unittest.TestCase):
         data, vardata, XYZ = make_data()
         G = wgraph_from_3d_grid(XYZ.T)
         # rfx calibration
-        P = pt.permutation_test_onesample_graph(data, G, ndraws=ndraws)
+        P = pt.Permutation_test_onesample_graph(data, G, ndraws=ndraws)
         c = [(P.random_Tvalues[P.ndraws*(0.95)],None)]
         r = np.ones(data.shape[1],int)
         r[data.shape[1]/2:] *= 10
         #p_values, cluster_results, region_results = P.calibrate(nperms=100, clusters=c, regions=[r])
         # mfx calibration
-        P = pt.permutation_test_onesample_graph(
+        P = pt.Permutation_test_onesample_graph(
             data, G, vardata=vardata, stat_id="student_mfx", ndraws=ndraws)
         p_values, cluster_results, region_results = P.calibrate(
             nperms=nperms, clusters=c, regions=[r])
@@ -58,14 +58,14 @@ class test_permutation_test(unittest.TestCase):
         data1, vardata1, data2, vardata2 = (
             data[:10], vardata[:10], data[10:],vardata[10:])
         # rfx calibration
-        P = pt.permutation_test_twosample(data1, data2, XYZ, ndraws=ndraws)
+        P = pt.Permutation_test_twosample(data1, data2, XYZ, ndraws=ndraws)
         c = [(P.random_Tvalues[P.ndraws*(0.95)],None),(P.random_Tvalues[P.ndraws*(0.5)],10)]
         r = [np.zeros(data.shape[1])]
         # Assuming our data.shape[1] is divisible by 2
         r[data.shape[1]//2:] *= 10
         #p_values, cluster_results, region_results=P.calibrate(nperms=100, clusters=c, regions=r)
         # mfx calibration
-        P = pt.permutation_test_twosample(data1, data2, XYZ, vardata1=vardata1, vardata2=vardata2, stat_id="student_mfx", ndraws=ndraws)
+        P = pt.Permutation_test_twosample(data1, data2, XYZ, vardata1=vardata1, vardata2=vardata2, stat_id="student_mfx", ndraws=ndraws)
         p_values, cluster_results, region_results = P.calibrate(nperms=nperms, clusters=c, regions=r)
 
 

@@ -97,7 +97,7 @@ def multiple_mahalanobis(effect, covariance):
     if covariance.shape[0] != covariance.shape[1]:
         raise ValueError('Inconsistant shape for covariance')
 
-    # transpose and make contuguous for the sake of speed
+    # transpose and make contiguous for the sake of speed
     Xt, Kt = np.ascontiguousarray(effect.T), np.ascontiguousarray(covariance.T)
 
     # compute the inverse of the covariances

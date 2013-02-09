@@ -51,7 +51,7 @@ DEF_DOFMAX = 1e10
 
 
 def data_scaling(Y):
-    """Scaling of the data to have pourcent of baseline change columnwise
+    """Scaling of the data to have percent of baseline change columnwise
 
     Parameters
     ----------
@@ -320,7 +320,7 @@ class Contrast(object):
                 self.effect = self.effect[np.newaxis]
             if self.variance.ndim == 1:
                 self.variance = self.variance[np.newaxis, np.newaxis]
-            stat = (multiple_mahalanobis(self.effect - baseline, 
+            stat = (multiple_mahalanobis(self.effect - baseline,
                                           self.variance) / self.dim)
         # Case: tmin (conjunctions)
         elif self.contrast_type == 'tmin-conjunction':
@@ -375,8 +375,8 @@ class Contrast(object):
         return self.z_score_
 
     def __add__(self, other):
-        """Addition of selfwith others, Yields an new Contrast instance
-        This should be used only on indepndent contrasts"""
+        """Addition of self with others, Yields a new Contrast instance
+        This should be used only on **independent** contrasts"""
         if self.contrast_type != other.contrast_type:
             raise ValueError(
                 'The two contrasts do not have consistant type dimensions')
@@ -418,6 +418,7 @@ class FMRILinearModel(object):
         ----------
         fmri_data : Image or str or sequence of Images / str
             fmri images / paths of the (4D) fmri images
+            The individual strings or array are - for instance - fMRI runs.
         design_matrices : arrays or str or sequence of arrays / str
             design matrix arrays / paths of .npz files
         mask : str or Image or None, optional
@@ -458,8 +459,9 @@ class FMRILinearModel(object):
         if isinstance(design_matrices, (basestring, np.ndarray)):
             design_matrices = [design_matrices]
         if len(fmri_data) != len(design_matrices):
-            raise ValueError('Incompatible number of fmri runs and '
-                             'design matrices were provided')
+            raise ValueError('Incompatible number of fmri runs %d and '
+                             'design matrices %d were provided' %
+                             (len(fmri_data), len(design_matrices)) )
         self.fmri_data, self.design_matrices = [], []
         self.glms, self.means = [], []
 
@@ -571,6 +573,7 @@ class FMRILinearModel(object):
                 contrast_ = glm.contrast(con, contrast_type)
             else:
                 contrast_ = contrast_ + glm.contrast(con, contrast_type)
+
         if output_z or output_stat:
             # compute the contrast and stat
             contrast_.z_score()
