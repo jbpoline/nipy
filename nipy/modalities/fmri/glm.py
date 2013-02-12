@@ -75,7 +75,7 @@ class GeneralLinearModel(object):
 
     Most of what it does in the fit() and contrast() methods
     fit() performs the standard two-step ('ols' then 'ar1') GLM fitting
-    contrast() returns a contrast instance, yileding statistics and p-values.
+    contrast() returns a contrast instance, yielding statistics and p-values.
     The link between fit() and constrast is done vis the two class members:
 
     glm_results : dictionary of nipy.algorithms.statistics.models.

@@ -342,10 +342,10 @@ def mfx_stat(Y, V1, X, column, n_iter=5, return_t=True,
               should one return the t test (True by default)
     return_f: bool, optional,
               should one return the F test (False by default)
-    return_effect: bool, optional,
-              should one return the effect estimate (False by default)
     return_var: bool, optional,
               should one return the variance estimate (False by default)
+    return_effect: bool, optional,
+              should one return the effect estimate (False by default)
 
     verbose: bool, optional, verbosity mode
 
